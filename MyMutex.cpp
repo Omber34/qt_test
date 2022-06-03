@@ -7,11 +7,16 @@
 
 MyMutex::MyMutex(MyModel& model) : model(model)
 {
-  model.globalMutex.lock();
+  model.proxyMutex.lock();
 }
 
 MyMutex::~MyMutex()
 {
+  {
+    std::lock_guard<std::mutex> lock(model.globalMutex);
+    std::copy(model.m_proxyData.begin(), model.m_proxyData.end(), std::back_inserter(model.m_futureData));
+  }
+
   model.updateData();
-  model.globalMutex.unlock();
+  model.proxyMutex.unlock();
 }

@@ -33,7 +33,9 @@ public:
 private:
   std::vector<MyModelItem> m_data;
   std::vector<MyModelItem> m_futureData;
+  std::vector<MyModelItem> m_proxyData;
   std::mutex globalMutex;
+  std::mutex proxyMutex;
 
   friend class MyMutex;
 

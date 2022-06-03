@@ -39,7 +39,7 @@ QVariant MyModel::headerData(int section, Qt::Orientation orientation, int role)
 
 void MyModel::insertNewData(MyModelItem item)
 {
-  m_futureData.push_back(item);
+  m_proxyData.push_back(item);
 }
 
 MyMutex MyModel::createMyMutex()
@@ -52,14 +52,14 @@ void MyModel::updateData()
   QMetaObject::invokeMethod(QCoreApplication::instance(),
                             [this]()
                             {
-                              std::vector<MyModelItem> future;
+                              std::vector<MyModelItem> newData;
                               {
                                 std::lock_guard<std::mutex> lock(globalMutex);
-                                std::swap(m_futureData, future);
+                                std::swap(m_futureData, newData);
                               }
 
-                              beginInsertRows(QModelIndex(), m_data.size(), m_data.size() + future.size());
-                              std::copy(future.begin(), future.end(), std::back_inserter(m_data));
+                              beginInsertRows(QModelIndex(), m_data.size(), m_data.size() + newData.size());
+                              std::copy(newData.begin(), newData.end(), std::back_inserter(m_data));
                               endInsertRows();
                             });
 }

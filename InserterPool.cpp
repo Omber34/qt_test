@@ -15,10 +15,10 @@ Inserter::Inserter(MyModel &model)
                                {
                                  auto mutex = model.createMyMutex();
 
+                                 std::this_thread::sleep_for(std::chrono::milliseconds(5));
                                  model.insertNewData(MyModelItem{ threadID, rowCount++ });
                                }
 
-                               std::this_thread::sleep_for(std::chrono::milliseconds(5));
                              }
                            });
 
